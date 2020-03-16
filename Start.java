@@ -269,6 +269,7 @@ public class Start {
 			scroller.setAutoscrolls(true);
 			
 			frame.getContentPane().add(scroller);
+			textField_chatInput.setForeground(Color.BLACK);
 			textField_chatInput.setBackground(Color.WHITE);
 			textField_chatInput.setBounds(250, 420, 200, 20);
 			
