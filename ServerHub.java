@@ -1,6 +1,8 @@
 
 public class ServerHub extends Server {
 
+
+	
 	private List<String> players = new List<String>();
 	private int active = 0;
 	private List<GameServer> games = new List<GameServer>();
@@ -17,6 +19,7 @@ public class ServerHub extends Server {
 
 		public GameServer(int pNumber, String bool, String pw) {
 			super(13370 + pNumber);
+			boolean test = false;
 			number = pNumber;
 			System.out.println(number);
 			priv = Boolean.getBoolean(bool);
