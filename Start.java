@@ -17,7 +17,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 
 public class Start {
-
+	//test
 	private JFrame frame, waitFrame;
 	private final JLabel lblWilkommenBeiSchiffe = new JLabel("Wilkommen bei Schiffe versenken ONLINE");
 	private final JTextField textField = new JTextField();
