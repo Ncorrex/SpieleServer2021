@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -28,11 +29,12 @@ public class Start {
 	public class Lobby {
 
 		public class Player extends Client{
-			private String name, IP;
-			public Player(String pIP, int pPort, String pName) {
+			private String name, IP, pass;
+			public Player(String pIP, int pPort, String pName, String pPass) {
 				super(pIP, pPort);
 				name = pName;
 				IP = pIP;
+				pass = pPass;
 			}
 
 			@Override
@@ -56,7 +58,7 @@ public class Start {
 					buttonLobby1.setForeground(Color.white);
 				} else if(pMessage.startsWith("/GAME")) {
 					int num = Integer.valueOf(pMessage.replace("/GAME", ""));
-					startGame(IP, num, name);
+					startGame(IP, num, name, pass);
 				} else if(pMessage.startsWith("/SEARCHING")) {
 					int num = Integer.valueOf(pMessage.replace("/SEARCHING", ""));
 					switch (num) {
@@ -101,9 +103,93 @@ public class Start {
 			}
 			
 			public void send(String pMessage) {
-				super.send(pMessage);
+				super.send(pMessage + ":" + pass);
 			}
 		}
+		
+		private class checkWin extends JFrame{
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+			boolean priv = false;
+			JLabel info = new JLabel("Soll es ein privates Spiel sein?");
+			JRadioButton jn = new JRadioButton("Public");
+			JButton start = new JButton("Start");
+			JTextField pw = new JTextField();
+			int num;
+			public checkWin(int pNum) {
+				num = pNum;
+				setResizable(false);
+				setLayout(null);
+				setBackground(Color.GRAY);
+				getContentPane().setBackground(Color.GRAY);
+				getContentPane().setLayout(null);
+				setForeground(Color.WHITE);
+				getContentPane().setForeground(Color.WHITE);
+				setBounds(100, 100, 300, 250);
+				
+				info.setBounds(0,0, 300,50);
+				info.setAlignmentX(SwingConstants.CENTER);
+				info.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+				info.setForeground(Color.WHITE);
+				info.setBackground(Color.DARK_GRAY);
+				
+				start.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+				start.setForeground(Color.WHITE);
+				start.setBackground(Color.DARK_GRAY);
+				start.setBounds((getWidth() / 2) - 75, 150, 150, 50);
+				start.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						send();
+						dispose();
+					}
+				});
+				
+				pw.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+				pw.setForeground(Color.WHITE);
+				pw.setBackground(Color.DARK_GRAY);
+				pw.setBounds(75, 150, 100, 50);
+				pw.setEnabled(false);
+				
+				jn.setBounds(75, 100, 50, 50);
+				jn.setText("Public");
+				jn.setForeground(Color.WHITE);
+				jn.setBackground(Color.DARK_GRAY);
+				jn.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						priv = !priv;
+						if(priv) {
+							jn.setText("Privat");
+							pw.setEnabled(true);
+						}
+						else {
+							jn.setText("Public");
+							pw.setEnabled(false);
+						}
+					}
+				});
+				
+				add(info);
+				add(start);
+				add(jn);
+				add(pw);
+				
+				setVisible(true);
+				
+			}
+			
+			public void send() {
+				String sPass = "";
+				if(pw.isEnabled()) {
+					sPass = pw.getText();
+				}
+				player.pass = sPass;
+				player.send("/game" + num +" " + priv + " " + sPass);
+			}
+			
+		}
+		
 		private Player player, gamePlayer;
 		private JFrame frame;
 		private final JButton buttonLobby1 = new JButton("Empty Lobby");
@@ -143,7 +229,7 @@ public class Start {
 			buttonLobby1.setBounds(30, 50, 200, 50);
 			buttonLobby1.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					player.send("/game1");
+					new checkWin(1);
 				}
 			});
 			
@@ -225,11 +311,11 @@ public class Start {
 
 		public void startHub(String pIP, String pName)
 		{
-			player = new Player(pIP, 13370, pName);
+			player = new Player(pIP, 13370, pName, "");
 		}
 		
-		public void startGame(String pIP, int pNumber, String pName) {
-			gamePlayer = new Player(pIP, 13370+pNumber, pName);
+		public void startGame(String pIP, int pNumber, String pName, String password) {
+			gamePlayer = new Player(pIP, 13370+pNumber, pName, password);
 			frame.setVisible(false);
 			System.out.println("Changed Server to Gameserver " + pNumber);
 		}

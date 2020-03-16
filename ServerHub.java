@@ -12,11 +12,15 @@ public class ServerHub extends Server {
 		private List<String> viewers = new List<String>();
 		private int nPlayers = 0;
 		private int nViewers = 0;
+		private boolean priv;
+		String password;
 
-		public GameServer(int pNumber) {
+		public GameServer(int pNumber, String bool, String pw) {
 			super(13370 + pNumber);
 			number = pNumber;
 			System.out.println(number);
+			priv = Boolean.getBoolean(bool);
+			password = pw;
 		}
 
 		@Override
@@ -25,13 +29,44 @@ public class ServerHub extends Server {
 			System.out.println(pClientIP + pClientPort);
 		}
 
-		public int getNumber()
-		{
+		public int getNumber() {
 			return number;
 		}
+
+		private boolean check(String m) {
+			String[] wordsWords = m.split(":");
+			if (wordsWords.length >= 2)
+				if (wordsWords[1].equals(password))
+					return true;
+				else
+					return false;
+			return true;
+		}
+
+		private String removePw(String pMessage) {
+			String[] wordswords = pMessage.split(":");
+			return wordswords[0];
+		}
+
 		@Override
 		public void processMessage(String pClientIP, int pClientPort, String pMessage) {
 			System.out.println(pMessage);
+
+			// check password every time; else kick
+			if ((priv && check(pMessage)) || !priv) {
+
+				String command = removePw(pMessage);
+				processCommand(pClientIP, pClientPort, command);
+
+				System.out.println(nPlayers);
+			} else {
+				send(pClientIP, pClientPort, "/WRONGPW");
+				closeConnection(pClientIP, pClientPort);
+			}
+		}
+
+		public void processCommand(String pClientIP, int pClientPort, String pMessage) {
+
 			if (pMessage.startsWith("/info")) {
 				String name = pMessage.replace("/info ", "");
 				if (nPlayers < 2) {
@@ -51,7 +86,6 @@ public class ServerHub extends Server {
 				String nachicht = pMessage.replace("/chat ", "");
 				sendToAll("/CHAT <" + name + ">	" + nachicht);
 			}
-			System.out.println(nPlayers);
 		}
 
 		@Override
@@ -81,15 +115,14 @@ public class ServerHub extends Server {
 				System.out.println("Closed");
 				close();
 			} else {
-				if(!playerLeft)
-				{
-				nViewers--;
-				sendToAll("/VIEWERS " + nViewers);
+				if (!playerLeft) {
+					nViewers--;
+					sendToAll("/VIEWERS " + nViewers);
 				}
 			}
 		}
-	}
 
+	}
 
 	public static void main(String[] args) {
 		new ServerHub();
@@ -108,9 +141,16 @@ public class ServerHub extends Server {
 		active++;
 	}
 
+	private String removePw(String pMessage) {
+		String[] wordswords = pMessage.split(":");
+		return wordswords[0];
+	}
+
 	@Override
 	public void processMessage(String pClientIP, int pClientPort, String pMessage) {
 		System.out.println(pMessage);
+		pMessage = removePw(pMessage);
+
 		if (pMessage.startsWith("/info")) {
 			String name = pMessage.replace("/info ", "");
 			players.append(pClientIP + ":" + name);
@@ -130,43 +170,42 @@ public class ServerHub extends Server {
 			}
 		} else if (pMessage.startsWith("/game1")) // Game Server 1
 		{
-			if(o1)
-			{
-				GameServer game1 = new GameServer(1);
-				games.append(game1);
+			if (o1) {
+				String[] wordsWords = pMessage.split(" ");
+				try {
+					GameServer game1 = new GameServer(1, wordsWords[1], wordsWords[2]);
+					games.append(game1);
+				} catch (Exception e) {
+					GameServer game1 = new GameServer(1, wordsWords[1], "");
+					games.append(game1);
+				}
 				send(pClientIP, pClientPort, "/GAME1");
 				sendToAll("/SEARCHING1");
 				o1 = false;
 				s1 = true;
-			} else if(s1)
-			{
+			} else if (s1) {
 				send(pClientIP, pClientPort, "/GAME1");
 				sendToAll("/RUNNING1");
 				s1 = false;
 				r1 = true;
-			} else if(r1)
-			{
+			} else if (r1) {
 				send(pClientIP, pClientPort, "/GAME1");
 			}
-		} 
+		}
 	}
-	
+
 	public void gameEnd(int closer) {
 		sendToAll("/GAME" + closer + "CLOSE");
 		games.toFirst();
-		while(games.hasAccess())
-		{
+		while (games.hasAccess()) {
 			int num = games.getContent().getNumber();
-			if(num == closer)
-			{
+			if (num == closer) {
 				games.remove();
-			}
-			else
-			{
+			} else {
 				games.next();
 			}
 		}
-		switch (closer){
+		switch (closer) {
 		case 1:
 			s1 = false;
 			r1 = false;
@@ -190,7 +229,7 @@ public class ServerHub extends Server {
 		}
 		active--;
 		if (active == 0) {
-			System.out.println("Server Shutdown");
+			System.out.println("[INFO]	Server Shutdown");
 			close();
 		}
 	}
