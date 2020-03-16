@@ -190,6 +190,7 @@ public class ServerHub extends Server {
 		}
 		active--;
 		if (active == 0) {
+			System.out.println("Server Shutdown");
 			close();
 		}
 	}
