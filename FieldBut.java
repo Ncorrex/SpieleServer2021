@@ -29,14 +29,15 @@ public class FieldBut extends JButton{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				actionPerf();
+				f.setupSet(x, y);
 			}
 		});
 	}
 	
-	public void actionPerf() {
+	public void actionPerf(boolean rec) {
 		if (setup) {
-			f.setupSet(x, y);
+			if(!rec) 
+				return;
 			isShip = !isShip;
 			if(isShip) {
 				setBackground(Color.black);

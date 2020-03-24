@@ -37,7 +37,7 @@ public class GameField extends JComponent {
 			}
 		}
 		
-		but2h = new JButton("2↓");
+		but2h = new JButton("2→");
 		but2h.setBounds(250, 0, 25,25);
 		but2h.setBackground(Color.lightGray);
 		but2h.addActionListener(new ActionListener() {
@@ -47,6 +47,20 @@ public class GameField extends JComponent {
 				dir = "2h";				
 			}
 		});
+		
+		but2v = new JButton("2↓");
+		but2v.setBounds(250, 25, 25,25);
+		but2v.setBackground(Color.lightGray);
+		but2v.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dir = "2v";				
+			}
+		});
+		
+		add(but2h);
+		add(but2v);
 	}
 
 	public void setupSet(int x,int y) {
@@ -55,13 +69,23 @@ public class GameField extends JComponent {
 		case "2h":
 			if(ships2 > 0)
 			try {
-				fields[x+1][y].actionPerf();
+				fields[x+1][y].actionPerf(true);
+				fields[x][y].actionPerf(true);
+				ships2--;
 			} catch (Exception e) {
-				fields[x][y].actionPerf();
+				fields[x][y].actionPerf(true);
 			}
 			break;
 		case "2v":
-			
+			if(ships2 > 0)
+				try {
+					fields[x][y+1].actionPerf(true);
+					fields[x][y].actionPerf(true);
+					ships2--;
+				} catch (Exception e) {
+					fields[x][y].actionPerf(true);
+				}
+				break;
 		}
 	}
 
