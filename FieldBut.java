@@ -3,18 +3,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.SwingConstants;
-import javax.swing.border.MatteBorder;
 
 public class FieldBut extends JButton{
 
-	private boolean isShip = false;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public boolean isShip = false;
 	private boolean shot = false;
 	public boolean setup = true;
 	int x,y;
 	GameField f;
 	
-	public FieldBut(int px, int py, GameField gF) {
+	public FieldBut(int px, int py, GameField gF) {	//erstellt den Button mit der gegebenen Position
 		super();
 		
 		x = px;
@@ -29,18 +31,17 @@ public class FieldBut extends JButton{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				f.setupSet(x, y);
+				f.setupSet(x, y, isShip);
 			}
 		});
 	}
 	
-	public void actionPerf(boolean rec) {
+	public void actionPerf(int intendedSize) {	//wenn noch setup modus ist, werden dort wo geklickt wurde schiffe gesetzt, sonst werden die schiffe "geöffnet"
 		if (setup) {
-			if(!rec) 
-				return;
 			isShip = !isShip;
 			if(isShip) {
 				setBackground(Color.black);
+				f.minusShip(intendedSize);
 			}else {
 				setBackground(Color.lightGray);
 			}

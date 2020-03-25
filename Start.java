@@ -16,20 +16,22 @@ import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 
+//imports von swing basieren auf awt
+
 public class Start {
 	//test
-	private JFrame frame, waitFrame;
-	private final JLabel lblWilkommenBeiSchiffe = new JLabel("Wilkommen bei Schiffe versenken ONLINE");
-	private final JTextField textField = new JTextField();
-	private final JLabel lblIp = new JLabel("IP:");
+	private JFrame frame, waitFrame; //fraems sind die Anwendungsfenster
+	private final JLabel lblWilkommenBeiSchiffe = new JLabel("Wilkommen bei Schiffe versenken ONLINE"); //label sind Textbereiche
+	private final JTextField textField = new JTextField(); //TextField sind felder in denen man text eingibt
+	private final JLabel lblIp = new JLabel("IP:");	
 	private final JTextField textField_1 = new JTextField();
 	private final JLabel lblName = new JLabel("NAME:");
-	private final JButton btnJoin = new JButton("JOIN");
+	private final JButton btnJoin = new JButton("JOIN"); //buttons
 	
 	public class Lobby {
 
-		public class Player extends Client{
-			private String name, IP, pass;
+		public class Player extends Client{		//innere klasse für leichteren zugriff auf Methoden und Attribute
+			private String name, IP, pass;	
 			public Player(String pIP, int pPort, String pName, String pPass) {
 				super(pIP, pPort);
 				name = pName;
@@ -40,55 +42,72 @@ public class Start {
 			@Override
 			public void processMessage(String pMessage) {
 				System.out.println(pMessage);
-				if(pMessage.startsWith("/CHAT"))
+				
+				
+				if(pMessage.startsWith("/CHAT"))	///CHAT für eine chatnachicht
 				{
-					String out = pMessage.replace("/CHAT ", "");
-					textPane_chat.setText(textPane_chat.getText().concat(out + "\n"));
-				} else if(pMessage.startsWith("/INFO")) {
+					String out = pMessage.replace("/CHAT ", "");	//überarbeitet den Parameter
+					textPane_chat.setText(textPane_chat.getText().concat(out + "\n"));	//überarbeitet das chatfeld
+				} 
+				
+				else if(pMessage.startsWith("/INFO")) {		// /INFO für Login als Namensabfrage
 					send("/info " + name);
 					send("/online");
-				} else if(pMessage.startsWith("/ONLINESTART"))
+				} 
+				
+				else if(pMessage.startsWith("/ONLINESTART"))	// /ONLINESTART für leeren des Online Feldes damit alle namen neu eingegeben werden können, ohne sich zu doppeln
 				{
-					textPane_online.setText("");
-				} else if(pMessage.startsWith("/ONLINE")) {
+					textPane_online.setText("");	//setzt den Text des Online Feldes leer
+				} 
+				
+				else if(pMessage.startsWith("/ONLINE")) {	// für Liste der Online Clients
 					String on = pMessage.replace("/ONLINE", "");
-					textPane_online.setText(textPane_online.getText() + on + "\n");
-				} else if(pMessage.startsWith("/GAME1CLOSE")) {
-					buttonLobby1.setText("Empty Lobby");
-					buttonLobby1.setForeground(Color.white);
-				} else if(pMessage.startsWith("/GAME")) {
+					textPane_online.setText(textPane_online.getText() + on + "\n");	//	erweiter die Online liste um den mit /ONLINE <user> command des Servers
+				} 
+				
+				else if(pMessage.startsWith("/GAME1CLOSE")) {	//wenn der Gameserver 1 runterfährt
+					buttonLobby1.setText("Empty Lobby");	//überarbeitet den Text des dazugehörigen buttons
+					buttonLobby1.setForeground(Color.white);	//s.o. aber mit Farbe
+				}
+				
+				else if(pMessage.startsWith("/GAME")) {	//Serverbefehl sich mit dem zu verbindene GameServer zu verbinden dargestellt durch /GAME<SpielNummer>
 					int num = Integer.valueOf(pMessage.replace("/GAME", ""));
-					startGame(IP, num, name, pass);
-				} else if(pMessage.startsWith("/SEARCHING")) {
-					int num = Integer.valueOf(pMessage.replace("/SEARCHING", ""));
-					switch (num) {
-					case 1:
-						buttonLobby1.setText("Warte auf Spieler...");
-						buttonLobby1.setForeground(Color.magenta);
+					startGame(IP, num, name, pass);	//startet ein SpielFenster
+				}
+				
+				else if(pMessage.startsWith("/SEARCHING")) {	//sobald ein GameServer einen Spieler sucht wird das überarbeitet
+					int num = Integer.valueOf(pMessage.replace("/SEARCHING", ""));	//sucht sich aus der pMessage die Nummer des suchenden Servers
+					switch (num) {	//switch anstatt if else
+					case 1:	//wenn GameServer 1
+						buttonLobby1.setText("Warte auf Spieler...");	//überarbeite den jewiligen button
+						buttonLobby1.setForeground(Color.magenta);		//so.o aber mit Farbe
+						break;											//abbrechen, damit nicht noch ein anderer case genutzt wird, da der richtige gefunden wurde
 					}
-				} else if(pMessage.startsWith("/WAIT4PLAYER")) {
-					waitFrame = new JFrame();
-					waitFrame.setBounds(100, 100, 300, 200);
-					waitFrame.setBackground(Color.GRAY);
-					waitFrame.getContentPane().setBackground(Color.GRAY);
-					waitFrame.getContentPane().setLayout(null);
-					waitFrame.setForeground(Color.WHITE);
+				}
+				
+				else if(pMessage.startsWith("/WAIT4PLAYER")) {			//ServerBefehl wenn man selbst auf einen Spieler wartet
+					waitFrame = new JFrame();							//erstelle ein neues Fenster
+					waitFrame.setBounds(100, 100, 300, 200);			//größe und Position
+					waitFrame.setBackground(Color.GRAY);				//hintergrundfarbe
+					waitFrame.getContentPane().setBackground(Color.GRAY);//hintergrundfabre von Panel (worauf die Buttons, label, etc. drauf sind)
+					waitFrame.getContentPane().setLayout(null);			//kein Layout, da layouts kacke sind
+					waitFrame.setForeground(Color.WHITE);				//setz Schriftfarbe
 					waitFrame.getContentPane().setForeground(Color.WHITE);
 					
-					JLabel wait = new JLabel("Warte auf Spieler...");
-					wait.setFont(new Font("Roboto Mono Medium", Font.BOLD, 16));
+					JLabel wait = new JLabel("Warte auf Spieler...");	//erstelle ein neues Label
+					wait.setFont(new Font("Roboto Mono Medium", Font.BOLD, 16));	//setze die Schriftart- und Größe
 					wait.setForeground(Color.WHITE);
 					wait.setBounds(0, 20, 300, 30);
-					wait.setHorizontalAlignment(SwingConstants.CENTER);
+					wait.setHorizontalAlignment(SwingConstants.CENTER);	//befehlt ist selbsterklärend wenn man Englisch nicht 4- steht
 					wait.setVerticalAlignment(SwingConstants.CENTER);					
-					waitFrame.getContentPane().add(wait);
+					waitFrame.getContentPane().add(wait);		//.add fügt das Object dem Fenster oder dem Pane zu, sodass es tatsächlich darauf existiert
 					
-					JButton exit = new JButton("EXIT");
+					JButton exit = new JButton("EXIT");		//neuer Button
 					exit.setBackground(Color.DARK_GRAY);
 					exit.setForeground(Color.WHITE);
 					exit.setBounds(100, 70, 100, 30);
 					waitFrame.getContentPane().add(exit);
-					exit.addActionListener(new ActionListener() {
+					exit.addActionListener(new ActionListener() {		//darin wird die Methode erschaffen die Ausgeführt wird, wenn der Button gedrückt wird
 						public void actionPerformed(ActionEvent e) {
 							gamePlayer.close();
 							gamePlayer = null;
@@ -96,14 +115,14 @@ public class Start {
 							frame.setVisible(true);
 						}
 					});
-					
-					waitFrame.setVisible(true);
+							
+					waitFrame.setVisible(true);		//setze das Frame sichtbar, damit es auch angezeigt wird
 					
 				} 
 			}
 			
 			public void send(String pMessage) {
-				super.send(pMessage + ":" + pass);
+				super.send(pMessage + ":" + pass);		//jaguut nh
 			}
 		}
 		
@@ -111,14 +130,17 @@ public class Start {
 			/**
 			 * 
 			 */
-			private static final long serialVersionUID = 1L;
-			boolean priv = false;
+			private static final long serialVersionUID = 1L;		//kp ist halt auch da und notwendig
+			boolean priv = false;			//boolean, ob der Server privat werden soll oder nicht
+			
+			//erstellt die Dinge
 			JLabel info = new JLabel("Soll es ein privates Spiel sein?");
 			JRadioButton jn = new JRadioButton("Public");
 			JButton start = new JButton("Start");
 			JTextField pw = new JTextField();
 			int num;
-			public checkWin(int pNum) {
+			
+			public checkWin(int pNum) {	//constructor
 				num = pNum;
 				setResizable(false);
 				setLayout(null);
@@ -142,7 +164,7 @@ public class Start {
 				start.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						send();
-						dispose();
+						dispose();	//dispose schließt das aktuelle Fenster
 					}
 				});
 				
@@ -157,7 +179,7 @@ public class Start {
 				jn.setForeground(Color.WHITE);
 				jn.setBackground(Color.DARK_GRAY);
 				jn.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
+					public void actionPerformed(ActionEvent e) {	//jedes mal wenn der Button gedrückt wird, wird der boolean verändert
 						priv = !priv;
 						if(priv) {
 							jn.setText("Privat");
@@ -185,10 +207,12 @@ public class Start {
 					sPass = pw.getText();
 				}
 				player.pass = sPass;
-				player.send("/game" + num +" " + priv + " " + sPass);
+				player.send("/game" + num +" " + priv + " " + sPass);		//sendet an den Server, dass er einen neuen Gameserver erstellen soll und die dazu nötigen Infos gleich mit
 			}
 			
 		}
+		
+		//alle dinge sind soweit versucht worden zu benennen, dass sie beim vergleich des GUIs mit dem Code erkennbar werden
 		
 		private Player player, gamePlayer;
 		private JFrame frame;
