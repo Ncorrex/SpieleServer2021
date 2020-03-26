@@ -1,4 +1,3 @@
-
 public class ServerHub extends Server {
 
 	private List<String> players = new List<String>();
