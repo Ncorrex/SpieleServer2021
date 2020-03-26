@@ -16,6 +16,7 @@ public class GameWindow {
 	private final JTextArea textArea = new JTextArea();
 	private Client client;
 
+	
 	/**
 	 * Create the application.
 	 */
@@ -24,6 +25,11 @@ public class GameWindow {
 		initialize();
 	}
 
+	public static void main(String[] args)
+	{
+		new GameWindow(null);
+	}
+	
 	/**
 	 * Initialize the contents of the frame.
 	 */
