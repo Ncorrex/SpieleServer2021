@@ -20,7 +20,6 @@ import javax.swing.border.MatteBorder;
 
 
 public class Start {
-	//test
 	private JFrame frame, waitFrame; //fraems sind die Anwendungsfenster
 	private final JLabel lblWilkommenBeiSchiffe = new JLabel("Wilkommen bei Schiffe versenken ONLINE"); //label sind Textbereiche
 	private final JTextField textField = new JTextField(); //TextField sind felder in denen man text eingibt
@@ -40,7 +39,7 @@ public class Start {
 				IP = pIP;
 				pass = pPass;
 				port = pPort;
-				private boolean hallooo;
+				int tt;
 			}
 
 			@Override
