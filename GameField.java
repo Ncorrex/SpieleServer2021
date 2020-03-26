@@ -51,18 +51,14 @@ public class GameField extends JComponent {
 				try {
 					fields[x + 1][y].actionPerf(2);
 					fields[x][y].actionPerf(2);
-				} catch (Exception e) {
-					fields[x][y].actionPerf(2);
-				}
+				} catch (Exception e) {}
 			break;
 		case "2v":
 			if (ships2 > 0)
 				try {
 					fields[x][y + 1].actionPerf(2);
 					fields[x][y].actionPerf(2);
-				} catch (Exception e) {
-					fields[x][y].actionPerf(2);
-				}
+				} catch (Exception e) {}
 			break;
 		}
 
