@@ -18,6 +18,7 @@ import javax.swing.border.MatteBorder;
 
 //imports von swing basieren auf awt
 
+
 public class Start {
 	//test
 	private JFrame frame, waitFrame; //fraems sind die Anwendungsfenster
@@ -39,6 +40,7 @@ public class Start {
 				IP = pIP;
 				pass = pPass;
 				port = pPort;
+				private boolean hallooo;
 			}
 
 			@Override
