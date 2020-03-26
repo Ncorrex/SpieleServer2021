@@ -31,12 +31,14 @@ public class Start {
 	public class Lobby {
 
 		public class Player extends Client{		//innere klasse für leichteren zugriff auf Methoden und Attribute
-			private String name, IP, pass;	
+			private String name, IP, pass;
+			int port;	
 			public Player(String pIP, int pPort, String pName, String pPass) {
 				super(pIP, pPort);
 				name = pName;
 				IP = pIP;
 				pass = pPass;
+				port = pPort;
 			}
 
 			@Override
@@ -118,7 +120,17 @@ public class Start {
 							
 					waitFrame.setVisible(true);		//setze das Frame sichtbar, damit es auch angezeigt wird
 					
-				} 
+				} else if(pMessage.equals("/START")){
+					waitFrame.setVisible(false);
+					new GameWindow(gamePlayer);
+				}
+				
+				else if(pMessage.startsWith("/HIT")) {
+					// if(gamePlayer.isPlayer)
+					// wenn spieler das jeweilige button feld aktualisieren
+					// else
+					// das jeweilige viewerfeld akutalisieren
+				}	
 			}
 			
 			public void send(String pMessage) {

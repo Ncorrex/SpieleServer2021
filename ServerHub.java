@@ -6,7 +6,7 @@ public class ServerHub extends Server {
 	private List<GameServer> games = new List<GameServer>();
 	boolean s1, s2, s3, s4, r1, r2, r3, r4, o1, o2, o3, o4;
 
-	private class GameServer extends Server {	//innere Klasse, damit leichter zu erstellen
+	private class GameServer extends Server { // innere Klasse, damit leichter zu erstellen
 		int number;
 		private List<String> players = new List<String>();
 		private List<String> viewers = new List<String>();
@@ -63,37 +63,58 @@ public class ServerHub extends Server {
 				send(pClientIP, pClientPort, "/WRONGPW");
 				closeConnection(pClientIP, pClientPort);
 			}
-			
+
 		}
 
 		public void processCommand(String pClientIP, int pClientPort, String pMessage) {
 
-			if (pMessage.startsWith("/info")) {	//bekommt name vom Client
+			if (pMessage.startsWith("/info")) { // bekommt name vom Client
 				String name = pMessage.replace("/info ", "");
 				if (nPlayers < 2) {
 					players.append(pClientIP + ":" + name);
 					nPlayers++;
-					send(pClientIP, pClientPort, "/PLAYER");	//weist den Client den Spielern zu
+					send(pClientIP, pClientPort, "/PLAYER"); // weist den Client den Spielern zu
+					if (nPlayers == 2) {
+						sendToAll("/START");
+					}
 					send(pClientIP, pClientPort, "/WAIT4PLAYER");
 				} else {
 					viewers.append(pClientIP + ":" + name);
 					nViewers++;
-					send(pClientIP, pClientPort, "/VIEWER");	//weist den Client den Zuschauern zu
+					send(pClientIP, pClientPort, "/VIEWER"); // weist den Client den Zuschauern zu
 					sendToAll("/CHAT [INFO]    " + name + " schaut dem Spiel zu!");
 					sendToAll("/VIEWERS " + nViewers);
 				}
-			} else if (pMessage.startsWith("/chat")) {		//wenn es eine Chat Nachicht ist
+			} else if (pMessage.startsWith("/chat")) { // wenn es eine Chat Nachicht ist
 				String name = nameVonIP(pClientIP);
 				String nachicht = pMessage.replace("/chat ", "");
 				sendToAll("/CHAT <" + name + ">	" + nachicht);
-			}				
-			//ToDo: kommunikation zwischen den Spielern untereinander und zu den Viewern
+			}
+			// ToDo: kommunikation zwischen den Spielern untereinander und zu den Viewern
 
+			else if (Character.isDigit(pMessage.charAt(1))) {
+				int x = pMessage.charAt(1);
+				int y = pMessage.charAt(2);
+
+				boolean pOne = false;
+
+				players.toFirst();
+				String[] player = players.getContent().split(":");
+				if (!player[0].equals(pClientIP)) {
+					pOne = false;
+				}
+				
+				sendToAll("/HIT " + pOne + " " + x + y);
+			}
 		}
 
 		@Override
-		public void processClosingConnection(String pClientIP, int pClientPort) {		/*sollte ein Spieler den GameServer verlassen, wird das Spiel 
-		und somit der Server beendet, sonst gibt es nur eine nachicht, das ein Viewer den Server verlassen hat*/
+		public void processClosingConnection(String pClientIP,
+				int pClientPort) { /*
+									 * sollte ein Spieler den GameServer verlassen, wird das Spiel und somit der
+									 * Server beendet, sonst gibt es nur eine nachicht, das ein Viewer den Server
+									 * verlassen hat
+									 */
 			boolean playerLeft = false;
 			players.toFirst();
 			while (players.hasAccess()) {
@@ -135,8 +156,9 @@ public class ServerHub extends Server {
 	public ServerHub() {
 		super(13370);
 		System.out.println("START");
-		
-		//haufen boolean die bestimmen ob ein GameServer o = offline ist, s = searching ist, r = running ist
+
+		// haufen boolean die bestimmen ob ein GameServer o = offline ist, s = searching
+		// ist, r = running ist
 		s1 = s2 = s3 = s4 = r1 = r2 = r3 = r4 = false;
 		o1 = o2 = o3 = o4 = true;
 	}
@@ -197,10 +219,11 @@ public class ServerHub extends Server {
 			} else if (r1) {
 				send(pClientIP, pClientPort, "/GAME1");
 			}
-		}		//ToDo: die anderen beiden SErver
+		} // ToDo: die anderen beiden SErver
 	}
 
-	public void gameEnd(int closer) {		//Methode wenn ein GameServer Dicht macht, damit von alleen Clients die infos geupdateet werden
+	public void gameEnd(int closer) { // Methode wenn ein GameServer Dicht macht, damit von alleen Clients die infos
+										// geupdateet werden
 		sendToAll("/GAME" + closer + "CLOSE");
 		games.toFirst();
 		while (games.hasAccess()) {
@@ -222,7 +245,7 @@ public class ServerHub extends Server {
 
 	@Override
 	public void processClosingConnection(String pClientIP, int pClientPort) {
-		sendToAll("/ONLINESTART");		//überarbeitet bei allen verbliebenden Clients die Online Liste
+		sendToAll("/ONLINESTART"); // überarbeitet bei allen verbliebenden Clients die Online Liste
 		players.toFirst();
 		while (players.hasAccess()) {
 			String[] player = players.getContent().split(":");
@@ -241,7 +264,8 @@ public class ServerHub extends Server {
 		}
 	}
 
-	private String nameVonIP(String pClientIP) {		//Methode um durch die IP an den jeweiligen Client Namen aus der Liste zu gelangen
+	private String nameVonIP(String pClientIP) { // Methode um durch die IP an den jeweiligen Client Namen aus der Liste
+													// zu gelangen
 		players.toFirst();
 		while (players.hasAccess()) {
 			String[] split = players.getContent().split(":");

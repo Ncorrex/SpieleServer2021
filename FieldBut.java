@@ -4,7 +4,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
-public class FieldBut extends JButton{
+public class FieldBut extends JButton {
 
 	/**
 	 * 
@@ -13,53 +13,56 @@ public class FieldBut extends JButton{
 	public boolean isShip = false;
 	private boolean shot = false;
 	public boolean setup = true;
-	int x,y;
+	int x, y;
 	GameField f;
-	
-	public FieldBut(int px, int py, GameField gF) {	//erstellt den Button mit der gegebenen Position
+
+	public FieldBut(int px, int py, GameField gF) { // erstellt den Button mit der gegebenen Position
 		super();
-		
+
 		x = px;
 		y = py;
-		
+
 		f = gF;
-		
-		setBounds(x * 25, y *25, 25, 25);
+
+		setBounds(x * 25, y * 25, 25, 25);
 		setBackground(Color.lightGray);
-		
+
 		addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				f.setupSet(x, y, isShip);
+				f.setupExpansion(x, y);
 			}
 		});
 	}
-	
+
 	public void actionPerf(int intendedSize) {	//wenn noch setup modus ist, werden dort wo geklickt wurde schiffe gesetzt, sonst werden die schiffe "geöffnet"
 		if (setup) {
 			isShip = !isShip;
 			if(isShip) {
 				setBackground(Color.black);
 				f.minusShip(intendedSize);
-			}else {
-				setBackground(Color.lightGray);
 			}
-		} else if(!shot){
-			if(isShip) {
-				//send(hit this)
+		}
+	}
+	
+	public void ready() {
+		setEnabled(false);
+	}
+
+	public void getHit() {
+		if (!shot) {
+			if (isShip) {
+				// send(hit this)
 				setEnabled(false);
 				setBackground(Color.red);
-			}else {
-				//send(noHit this)
+			} else {
+				// send(noHit this)
 				setEnabled(false);
 				setBackground(Color.blue);
 			}
 			shot = true;
-		}	
+		}
 	}
-	
-	
-	
-	
+
 }

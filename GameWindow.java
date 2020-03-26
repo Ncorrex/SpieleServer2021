@@ -1,5 +1,3 @@
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import java.awt.Color;
 import javax.swing.JTextField;
@@ -16,27 +14,13 @@ public class GameWindow {
 	private final JTextField textField = new JTextField();
 	private final JButton btnSend = new JButton("send");
 	private final JTextArea textArea = new JTextArea();
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GameWindow window = new GameWindow();
-					window.frmSchiffeversenken.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private Client client;
 
 	/**
 	 * Create the application.
 	 */
-	public GameWindow() {
+	public GameWindow(Client pClient) {
+		client = pClient;
 		initialize();
 	}
 
@@ -80,11 +64,12 @@ public class GameWindow {
 
 		frmSchiffeversenken.getContentPane().add(textArea);
 
-		GameField gameField = new GameField();
+		GameField gameField = new GameField(client, true);
 		frmSchiffeversenken.getContentPane().add(gameField);
 
 		frmSchiffeversenken.setBounds(100, 100, 800, 500);
 		frmSchiffeversenken.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmSchiffeversenken.setVisible(true);
 
 	}
 }
