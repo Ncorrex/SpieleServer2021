@@ -13,7 +13,6 @@ public class ServerHub extends Server {
 		private int nViewers = 0;
 		private boolean priv;
 		String password;
-		int blablanbla;
 
 		public GameServer(int pNumber, String bool, String pw) {
 			super(13370 + pNumber);

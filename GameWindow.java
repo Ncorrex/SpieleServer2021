@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import javax.swing.border.MatteBorder;
+
+
 import javax.swing.JTextArea;
 
 public class GameWindow {
@@ -14,7 +16,7 @@ public class GameWindow {
 	private final JTextField textField = new JTextField();
 	private final JButton btnSend = new JButton("send");
 	private final JTextArea textArea = new JTextArea();
-	private Client client;
+	Client client;
 
 	
 	/**
@@ -66,12 +68,15 @@ public class GameWindow {
 		textArea.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		textArea.setBackground(Color.DARK_GRAY);
 		textArea.setForeground(Color.WHITE);
-		textArea.setBounds(470, 250, 300, 170);
+		textArea.setBounds(470, 310, 300, 110);
 
 		frmSchiffeversenken.getContentPane().add(textArea);
 
 		GameField gameField = new GameField(client, true);
 		frmSchiffeversenken.getContentPane().add(gameField);
+		
+		GameField viewField = new GameField(client, false);
+		frmSchiffeversenken.getContentPane().add(viewField);
 
 		frmSchiffeversenken.setBounds(100, 100, 800, 500);
 		frmSchiffeversenken.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

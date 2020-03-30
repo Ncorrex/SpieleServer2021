@@ -36,7 +36,7 @@ public class GameField extends JComponent {
 			setBounds(50, 50, 280, 250);
 			initSetup();
 		} else {
-			setBounds(500, 50, 280, 250);
+			setBounds(500, 50, 250, 250);
 			initView();
 		}
 
@@ -70,12 +70,12 @@ public class GameField extends JComponent {
 				JButton temp = new JButton();
 				final int alX = x;
 				final int alY = y;
+				final Client cl = client;
 				temp.addActionListener(new ActionListener() {
-					Client cl = client;
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						String send = "/" + alX + alY;
-						cl.send(send);						
+						String message = "/" + alX + " " + alY;
+						cl.send(message);
 					}
 				});
 				temp.setBounds(x * 25, y * 25, 25, 25);

@@ -39,7 +39,6 @@ public class Start {
 				IP = pIP;
 				pass = pPass;
 				port = pPort;
-				int tt;
 			}
 
 			@Override
