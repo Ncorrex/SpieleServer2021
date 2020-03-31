@@ -138,6 +138,10 @@ public class Start {
 			}
 		}
 		
+		private class pwWin extends JFrame{
+			JLabel info = new JLabel("Gib das Passwort ein!");
+		}
+		
 		private class checkWin extends JFrame{
 			/**
 			 * 

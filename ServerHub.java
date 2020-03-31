@@ -187,12 +187,12 @@ public class ServerHub extends Server {
 			String nachicht = pMessage.replace("/chat ", "");
 			sendToAll("/CHAT <" + name + ">	" + nachicht);
 		} else if (pMessage.startsWith("/online")) {
-			send(pClientIP, pClientPort, "/ONLINESTART");
+			sendToAll("/ONLINESTART");
 			players.toFirst();
 			while (players.hasAccess()) {
 				String[] player = players.getContent().split(":");
 				String name = player[1];
-				send(pClientIP, pClientPort, "/ONLINE " + name);
+				sendToAll("/ONLINE " + name);
 				players.next();
 			}
 		} else if (pMessage.startsWith("/game1")) // Game Server 1
