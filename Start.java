@@ -140,6 +140,55 @@ public class Start {
 		
 		private class pwWin extends JFrame{
 			JLabel info = new JLabel("Gib das Passwort ein!");
+			JTextField pw = new JTextField();
+			JButton start = new JButton();
+			int num;
+			
+			public pwWin(int pNum) {
+				num = pNum;
+				setResizable(false);
+				setLayout(null);
+				setBackground(Color.GRAY);
+				getContentPane().setBackground(Color.GRAY);
+				getContentPane().setLayout(null);
+				setForeground(Color.WHITE);
+				getContentPane().setForeground(Color.WHITE);
+				setBounds(100, 100, 300, 250);
+				
+				info.setBounds(0,0, 300,50);
+				info.setAlignmentX(SwingConstants.CENTER);
+				info.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+				info.setForeground(Color.WHITE);
+				info.setBackground(Color.DARK_GRAY);
+				
+				pw.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+				pw.setForeground(Color.WHITE);
+				pw.setBackground(Color.DARK_GRAY);
+				pw.setBounds(75, 150, 100, 50);
+				pw.setEnabled(false);
+				
+				start.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+				start.setForeground(Color.WHITE);
+				start.setBackground(Color.DARK_GRAY);
+				start.setBounds((getWidth() / 2) - 75, 150, 150, 50);
+				start.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						send();
+						dispose();	//dispose schließt das aktuelle Fenster
+					}
+
+				});
+			}
+
+			private void send() {
+				String sPass = "";
+				if(pw.isEnabled()) {
+					sPass = pw.getText();
+				}
+				player.pass = sPass;
+				player.send("/game" + num);
+				
+			}
 		}
 		
 		private class checkWin extends JFrame{

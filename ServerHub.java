@@ -11,7 +11,7 @@ public class ServerHub extends Server {
 		private List<String> viewers = new List<String>();
 		private int nPlayers = 0;
 		private int nViewers = 0;
-		private boolean priv;
+		public boolean priv;
 		String password;
 
 		public GameServer(int pNumber, String bool, String pw) {
