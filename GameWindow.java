@@ -59,7 +59,11 @@ public class GameWindow {
 		btnSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (!textField.getText().equals(""))
-					textArea.setText(textArea.getText() + textField.getText() + "\n");
+					client.send(textArea.getText() + textField.getText());
+					client.processMessage(textArea.getText() + textField.getText());
+					
+					//ToDo 	client override sodass eine processedMessage in das Textfield kommt.
+					
 			}
 		});
 		btnSend.setBounds(710, 430, 60, 20);

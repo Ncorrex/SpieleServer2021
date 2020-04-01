@@ -35,7 +35,7 @@ public class ServerHub extends Server {
 		private boolean check(String m) {
 			String[] wordsWords = m.split(":");
 			if (wordsWords.length >= 2)
-				if (wordsWords[1].equals(password))
+				if (wordsWords[wordsWords.length - 1].equals(password))
 					return true;
 				else
 					return false;
@@ -44,7 +44,7 @@ public class ServerHub extends Server {
 
 		private String removePw(String pMessage) {
 			String[] wordswords = pMessage.split(":");
-			return wordswords[0];
+			return pMessage.replace(wordswords[wordswords.length - 1], "");
 		}
 
 		@Override
